@@ -1,6 +1,6 @@
 <%= turbo_frame_tag exam_type do %>
   <div class="table min-w-full">
-    <div><%= link_to exam_type.name, exam_type_path(exam_type), data: { turbo_frame: "_top" } %></div>
+    <div><%= link_to exam_type.name, exam_type_path(exam_type), data: { turbo: false } %></div>
     <div><%= exam_type.status %></div>
     <div>
       <% if action_name != "show" %>
