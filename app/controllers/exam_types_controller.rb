@@ -3,7 +3,7 @@ class ExamTypesController < ApplicationController
 
   # GET /exam_types or /exam_types.json
   def index
-    @exam_types = ExamType.all
+    @exam_types = ExamType.ordered
   end
 
   # GET /exam_types/1 or /exam_types/1.json
@@ -23,38 +23,42 @@ class ExamTypesController < ApplicationController
   def create
     @exam_type = ExamType.new(exam_type_params)
 
-    respond_to do |format|
-      if @exam_type.save
-        format.html { redirect_to exam_type_url(@exam_type), notice: "Exam type was successfully created." }
-        format.json { render :show, status: :created, location: @exam_type }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @exam_type.errors, status: :unprocessable_entity }
-      end
+    if @exam_type.save
+      flash.now[:notice] = "Exam Type was successfully created."
+
+      render turbo_stream: [
+        turbo_stream.prepend("exam_types", @exam_type),
+        turbo_stream.update(ExamType.new, ""),
+        turbo_stream.prepend("flash", partial: "layouts/flash")
+      ]
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /exam_types/1 or /exam_types/1.json
   def update
-    respond_to do |format|
-      if @exam_type.update(exam_type_params)
-        format.html { redirect_to exam_type_url(@exam_type), notice: "Exam type was successfully updated." }
-        format.json { render :show, status: :ok, location: @exam_type }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @exam_type.errors, status: :unprocessable_entity }
-      end
+    if @exam_type.update(exam_type_params)
+      flash.now[:notice] = "Exam Type was successfully updated."
+
+      render turbo_stream: [
+        turbo_stream.replace(@exam_type, @exam_type),
+        turbo_stream.prepend("flash", partial: "layouts/flash")
+      ]
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /exam_types/1 or /exam_types/1.json
   def destroy
     @exam_type.destroy
+    flash.now[:notice] = "Exam Type was successfully destroyed."
 
-    respond_to do |format|
-      format.html { redirect_to exam_types_url, notice: "Exam type was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    render turbo_stream: [
+      turbo_stream.remove(@exam_type),
+      turbo_stream.prepend("flash", partial: "layouts/flash")
+    ]
   end
 
   private

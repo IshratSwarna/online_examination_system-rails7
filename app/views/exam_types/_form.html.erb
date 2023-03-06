@@ -1,4 +1,4 @@
-<%= form_with(model: exam_type, class: "contents") do |form| %>
+<%= form_with model: exam_type, id: dom_id(exam_type, "form"), class: "table min-w-full" do |form| %>
   <% if exam_type.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(exam_type.errors.count, "error") %> prohibited this exam_type from being saved:</h2>
@@ -11,14 +11,12 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
+  <div>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.select :status, ExamType.statuses.keys, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  <div>
+    <%= form.select :status, ExamType.statuses.keys %>
   </div>
 
   <div class="inline">

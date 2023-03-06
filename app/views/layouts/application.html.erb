@@ -11,9 +11,13 @@
   </head>
 
   <body>
-    <div class="container mt-8 ms-auto">
-      <%= yield %>
-    </div>
+    <main class="container mx-auto mt-28 px-5">
     
+      <div id="flash" class="flash">
+        <%= render "layouts/flash" %>
+      </div>
+
+      <%= yield %>
+    </main>
   </body>
 </html>
